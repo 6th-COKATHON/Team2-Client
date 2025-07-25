@@ -11,7 +11,7 @@ interface FormData {
 }
 
 interface SignupFormProps {
-  onSignupSuccess: () => void; // 회원가입 성공 시 호출될 함수
+  onSignupSuccess: () => void;
 }
 
 export const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
@@ -67,30 +67,24 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
       try {
         console.log("회원가입 시도 중...", formData);
 
-        // 회원가입 API 호출 (실제 API 함수로 교체)
         const res = await postSignUp({
           email: formData.email,
           password: formData.password,
         });
 
-        // 회원가입 성공 확인
         if (res.status === 201 || res.status === 200) {
-          // 성공 Alert 표시
           alert(
             `🎉 회원가입이 완료되었습니다!\n\n농장 가족이 되신 것을 축하드려요 🌾\n이제 로그인해서 농장을 시작해보세요!`,
           );
 
-          // 폼 초기화
           setFormData({
             email: "",
             password: "",
             confirmPassword: "",
           });
 
-          // 로그인 폼으로 전환
           onSignupSuccess();
         } else {
-          // 회원가입 실패 처리
           const errorMessage = "회원가입 중 오류가 발생했습니다.";
 
           if (errorMessage.includes("이메일")) {
@@ -113,7 +107,6 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
     exit: { opacity: 0, x: -20 },
   };
 
-  // 비밀번호 강도 체크
   const getPasswordStrength = () => {
     const password = formData.password;
     if (password.length === 0) return 0;
@@ -179,7 +172,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
 
       {/* 비밀번호 입력 */}
       <div>
-        <label className="mb-2 block flex items-center gap-1 text-sm font-medium text-amber-800">
+        <label className="mb-2 flex items-center gap-1 text-sm font-medium text-amber-800">
           🔐 비밀번호
         </label>
         <motion.div
@@ -252,7 +245,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onSignupSuccess }) => {
 
       {/* 비밀번호 확인 */}
       <div>
-        <label className="mb-2 block flex items-center gap-1 text-sm font-medium text-amber-800">
+        <label className="mb-2 flex items-center gap-1 text-sm font-medium text-amber-800">
           🔒 비밀번호 확인
         </label>
         <motion.div

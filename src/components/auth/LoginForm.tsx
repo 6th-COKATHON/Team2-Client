@@ -6,6 +6,7 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import farmDoor from "@/assets/farmDoor.svg";
 import { postLogin } from "@/apis/auth/postAuth";
 import { useNavigate } from "react-router-dom";
+import { path } from "@/routes/path";
 
 interface FormData {
   email: string;
@@ -61,7 +62,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // 원안으로 빨려 들어가는 농장 문 애니메이션
   const runFarmDoorAnimation = async () => {
     setIsLocalAnimating(true);
     setIsAnimating(true);
@@ -69,7 +69,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     onAnimationStart();
 
     try {
-      // 먼저 농장 문이 나타남 (확대)
       await doorAnimation.start({
         opacity: [0, 1],
         scale: [0.5, 2],
@@ -81,10 +80,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         },
       });
 
-      // 잠시 멈춤 (농장 문이 열린 상태)
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // 원안으로 빨려 들어가는 효과
       await doorAnimation.start({
         opacity: [1, 0],
         scale: [2, 0.1],
@@ -113,23 +110,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       console.log("로그인 데이터:", formData);
 
       try {
-        // 로그인 API 호출 및 응답 대기
         const res = await postLogin({
           email: formData.email,
           password: formData.password,
         });
 
-        // 로그인 성공 확인 (API 응답 구조에 따라 조정)
         if (res.status === 200) {
           console.log("로그인 성공! 농장으로 이동합니다 🌾");
 
-          // 성공 시에만 농장 문 애니메이션 실행
           await runFarmDoorAnimation();
 
-          // 애니메이션 완료 후 페이지 이동
-          navigate("/dashboard"); // 또는 원하는 페이지 경로
+          navigate(path.main);
         } else {
-          // 로그인 실패 처리
           setErrors({
             password: "로그인에 실패했습니다. 다시 시도해주세요.",
           });
@@ -163,9 +155,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           onSubmit={handleSubmit}
           className="relative z-10 space-y-6"
         >
-          {/* 폼 내용은 동일... */}
           <div>
-            <label className="mb-2 block flex items-center gap-1 text-sm font-medium text-amber-800">
+            <label className="mb-2 flex items-center gap-1 text-sm font-medium text-amber-800">
               📧 이메일
             </label>
             <motion.div
@@ -198,7 +189,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           </div>
 
           <div>
-            <label className="mb-2 block flex items-center gap-1 text-sm font-medium text-amber-800">
+            <label className="mb-2 flex items-center gap-1 text-sm font-medium text-amber-800">
               🔐 비밀번호
             </label>
             <motion.div
@@ -261,7 +252,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         </motion.form>
       </div>
 
-      {/* Portal로 농장 문 렌더링 - 빨려들어가는 효과 */}
       {typeof window !== "undefined" &&
         createPortal(
           <motion.div
@@ -296,7 +286,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 }}
               />
 
-              {/* 포탈 글로우 효과 */}
               <motion.div
                 animate={doorAnimation}
                 className="absolute inset-0 rounded-full bg-transparent blur-xl"

@@ -38,7 +38,6 @@ export const AuthPage: React.FC = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-4">
-      {/* 전체 페이지 블러 오버레이 - z-40으로 조정 (농장문 z-50보다 낮게) */}
       <motion.div
         animate={blurAnimation}
         initial={{ opacity: 0 }}
@@ -49,7 +48,6 @@ export const AuthPage: React.FC = () => {
         }}
       />
 
-      {/* 농장 느낌의 배경 장식 */}
       <div
         className={`absolute inset-0 opacity-5 transition-all duration-300 ${isAnimating ? "blur-sm" : ""}`}
       >
@@ -82,7 +80,6 @@ export const AuthPage: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* 폼 카드 */}
         <motion.div
           layout
           className="relative rounded-3xl border-2 border-amber-200/50 bg-gradient-to-br from-orange-50/90 to-amber-50/90 p-8 shadow-2xl backdrop-blur-sm"
