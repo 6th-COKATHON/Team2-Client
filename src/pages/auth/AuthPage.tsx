@@ -98,7 +98,10 @@ export const AuthPage: React.FC = () => {
                 onAnimationStart={runBlurAnimation}
               />
             ) : (
-              <SignupForm key="signup" />
+              <SignupForm
+                key="signup"
+                onSignupSuccess={() => setIsLogin(true)}
+              />
             )}
           </AnimatePresence>
 

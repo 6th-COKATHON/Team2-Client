@@ -4,6 +4,8 @@ import { motion, useAnimation } from "framer-motion";
 import { createPortal } from "react-dom";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import farmDoor from "@/assets/farmDoor.svg";
+import { postLogin } from "@/apis/auth/postAuth";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -21,6 +23,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   setIsAnimating,
   onAnimationStart,
 }) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -107,8 +111,37 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     e.preventDefault();
     if (validateForm()) {
       console.log("로그인 데이터:", formData);
-      await runFarmDoorAnimation();
-      console.log("농장으로 입장합니다! 🌾");
+
+      try {
+        // 로그인 API 호출 및 응답 대기
+        const res = await postLogin({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        // 로그인 성공 확인 (API 응답 구조에 따라 조정)
+        if (res.status === 200) {
+          console.log("로그인 성공! 농장으로 이동합니다 🌾");
+
+          // 성공 시에만 농장 문 애니메이션 실행
+          await runFarmDoorAnimation();
+
+          // 애니메이션 완료 후 페이지 이동
+          navigate("/dashboard"); // 또는 원하는 페이지 경로
+        } else {
+          // 로그인 실패 처리
+          setErrors({
+            password: "로그인에 실패했습니다. 다시 시도해주세요.",
+          });
+        }
+      } catch (error) {
+        console.error("로그인 에러:", error);
+
+        setErrors({
+          email: "이메일 또는 비밀번호가 일치하지 않습니다.",
+          password: "이메일 또는 비밀번호가 일치하지 않습니다.",
+        });
+      }
     }
   };
 
