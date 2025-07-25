@@ -5,7 +5,7 @@ import { HarvestRateCard } from "@/components/common/HarvestRateCard";
 import { PotatoFieldCard } from "@/components/common/PotatoFieldCard";
 import { ArticleCard } from "@/components/common/ArticleCard";
 import potatoLogo from "@/assets/potatoLogo.svg";
-import potatoBG from "@/assets/potatoBG.svg";
+import testBG from "@/assets/debugBG.svg";
 
 export const Main = () => {
   // '나의 감자밭' 컴포넌트에 전달할 임시 데이터
@@ -24,7 +24,7 @@ export const Main = () => {
     <div
       className="relative flex min-h-screen flex-1 flex-col bg-cover bg-center p-8" // 전체적인 패딩 추가
       style={{
-        backgroundImage: `url(${potatoBG})`,
+        backgroundImage: `url(${testBG})`,
       }}
     >
       <img src={potatoLogo} className="absolute top-4 left-4 h-24 w-24" />

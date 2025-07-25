@@ -1,0 +1,56 @@
+{
+  "todayStatus": {
+    "count": 12
+  },
+  "harvestRate": 25,
+  "potatoField": {
+    "dailyLevels": [
+      1, 0, 2, 3, 1, 4, 2, 1, 0, 2, 3, 1, 1, 4, 2, 1, 0, 3, 1, 2, 4, 3, 1, 0, 2,
+      3, 1, 4, 2, 3
+    ]
+  },
+  "categories": [
+    { "id": "society", "name": "사회" },
+    { "id": "economy", "name": "경제" },
+    { "id": "politics", "name": "정치" },
+    { "id": "it", "name": "IT" },
+    { "id": "culture", "name": "생활/문화" }
+  ],
+  "articles": [
+    {
+      "articleId": "1",
+      "categoryId": "society",
+      "imageUrl": "https://images.unsplash.com/photo-1504711434969-e33886168f5c",
+      "title": "한신대, 인재양성기금 1억 기부받아",
+      "description": "한신대학교는 최근 경기 오산시에 있는 경기캠퍼스에서 강남대청교회 김동범 장로와 장필순 권사가 ‘한신인재양성기금’으로 1억 원 기부를 약정했다고 26일 밝혔다.",
+      "source": "YTN",
+      "date": "2025-07-26"
+    },
+    {
+      "articleId": "2",
+      "categoryId": "society",
+      "title": "여름철 도심 열섬 현상, 녹지 조성으로 해결 모색",
+      "description": "정부와 각 지자체는 계속되는 폭염과 도심 열섬 현상에 대응하기 위해 도심 공원 및 녹지 공간 확대 정책을 발표했다.",
+      "source": "연합뉴스",
+      "date": "2025-07-25"
+    },
+    {
+      "articleId": "3",
+      "categoryId": "economy",
+      "imageUrl": "https://images.unsplash.com/photo-1665686308827-eb62e4f6604d",
+      "title": "한국은행, 기준 금리 동결 결정... 시장 안정 주력",
+      "description": "한국은행 금융통화위원회는 오늘 열린 정례회의에서 현재의 기준금리를 연 3.5%로 유지하기로 결정했다고 밝혔다.",
+      "source": "매일경제",
+      "date": "2025-07-26"
+    },
+    {
+      "articleId": "4",
+      "categoryId": "it",
+      "imageUrl": "https://images.unsplash.com/photo-1550745165-9bc0b252726a",
+      "title": "국내 AI 반도체 스타트업, 차세대 칩 개발 성공",
+      "description": "국내 AI 반도체 설계 전문 기업 '퓨처칩스'가 기존 제품보다 연산 속도를 2배 높인 차세대 AI 반도체 '뉴로-X2'를 공개했다.",
+      "source": "전자신문",
+      "date": "2025-07-24"
+    }
+  ]
+}

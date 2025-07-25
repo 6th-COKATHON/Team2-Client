@@ -12,6 +12,10 @@
   html {
     font-size: 16px;
     font-family: "Pretendard", sans-serif;
+    overscroll-behavior-y: none;
+  }
+  body {
+    overscroll-behavior-y: none;
   }
   button {
     @apply cursor-pointer;
@@ -19,4 +23,13 @@
 }
 
 @layer utilities {
+}
+/* 스크롤 바 숨기기 */
+* {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
 }

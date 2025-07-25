@@ -1,8 +1,8 @@
+import { motion } from "framer-motion";
 import { Image as ImageIcon } from "lucide-react";
 
-// 컴포넌트가 받을 props 타입을 정의합니다.
 interface ArticleCardProps {
-  imageUrl?: string; // 이미지 URL은 선택 사항
+  imageUrl?: string;
   title: string;
   description: string;
   source: string;
@@ -17,14 +17,20 @@ export const ArticleCard = ({
   date,
 }: ArticleCardProps) => {
   return (
-    <article className="flex w-full max-w-4xl items-center gap-6 rounded-[.625rem] border-2 border-[#fbd44c] bg-[#FEFBF3] p-6 shadow-md">
-      {/* 이미지 섹션: imageUrl이 있으면 img 태그, 없으면 플레이스홀더를 렌더링 */}
+    // 1. <article>을 <motion.article>로 변경하고 애니메이션 props를 추가합니다.
+    <motion.article
+      className="flex w-full max-w-4xl cursor-pointer items-center gap-6 rounded-[.625rem] border-2 border-[#fbd44c] bg-[#FEFBF3] p-6 shadow-md transition-shadow duration-300 hover:shadow-xl"
+      initial={{ opacity: 0, y: 20 }} // 초기 상태: 투명하고 20px 아래에 위치
+      animate={{ opacity: 1, y: 0 }} // 최종 상태: 불투명하고 제자리에 위치
+      transition={{ duration: 0.5, ease: "easeOut" }} // 애니메이션 지속 시간 및 효과
+      whileHover={{ scale: 1.03 }} // 호버 시 3% 커짐
+    >
       <div className="flex-shrink-0">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={title}
-            className="h-32 w-40 rounded-lg object-center"
+            className="h-32 w-40 rounded-lg object-cover" // object-center 대신 object-cover 추천
           />
         ) : (
           <div className="flex h-32 w-32 items-center justify-center rounded-lg bg-gray-200">
@@ -33,7 +39,6 @@ export const ArticleCard = ({
         )}
       </div>
 
-      {/* 텍스트 콘텐츠 섹션 */}
       <div className="flex flex-col justify-center gap-4">
         <h3 className="text-2xl font-bold text-[#78350f]">{title}</h3>
         <p className="line-clamp-2 text-lg leading-relaxed text-[#92400d]">
@@ -45,6 +50,6 @@ export const ArticleCard = ({
           <span>{date}</span>
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 };

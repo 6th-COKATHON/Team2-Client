@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { path } from "./path";
-import { AuthPage, Home, Main } from "@/pages";
+import { ArticleDetail, AuthPage, Home, Main } from "@/pages";
 
 const AppRouter = createBrowserRouter([
   {
@@ -14,6 +14,10 @@ const AppRouter = createBrowserRouter([
   {
     path: path.main,
     element: <Main />,
+  },
+  {
+    path: path.deatil,
+    element: <ArticleDetail />,
   },
 ]);
 
