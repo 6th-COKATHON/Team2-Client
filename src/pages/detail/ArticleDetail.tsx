@@ -84,20 +84,18 @@ export const ArticleDetail = () => {
       <PotatoFarmNewsArticle articleData={articleData as Article} />
       <PotatoQuizComponent
         questions={
-          detailData?.quizList.length !== 0
-            ? detailData?.quizList
-            : [
-                {
-                  id: 1,
-                  question:
-                    "정부는 모든 의대생의 유급 및 제적 여부를 ‘유급은 학칙대로, 제적은 전원 유예’로 통일하여 결정했다.",
-                },
-                {
-                  id: 2,
-                  question:
-                    "정부는 2027년 2월 또는 8월 졸업을 선택한 본과 3학년 학생들을 위해 의사 국가시험을 추가로 실시할 계획이다.",
-                },
-              ]
+          detailData?.quizList || [
+            {
+              id: 1,
+              question:
+                "정부는 모든 의대생의 유급 및 제적 여부를 ‘유급은 학칙대로, 제적은 전원 유예’로 통일하여 결정했다.",
+            },
+            {
+              id: 2,
+              question:
+                "정부는 2027년 2월 또는 8월 졸업을 선택한 본과 3학년 학생들을 위해 의사 국가시험을 추가로 실시할 계획이다.",
+            },
+          ]
         }
       />
     </div>

@@ -194,7 +194,7 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
         </div>
       </div>
       <div className="space-y-8 p-8">
-        {questions.map((question) => (
+        {questions?.map((question) => (
           <div
             key={question.id}
             className="rounded-xl border-2 border-amber-100 bg-white/50 p-6"
