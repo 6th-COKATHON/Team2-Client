@@ -1,2 +1,2 @@
 export { Home } from "./home/Home";
-export { AuthPage } from "./auth/authPage";
+export { AuthPage } from "./auth/AuthPage";
