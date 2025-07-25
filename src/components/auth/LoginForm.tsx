@@ -107,8 +107,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("로그인 데이터:", formData);
-
       try {
         const res = await postLogin({
           email: formData.email,
@@ -116,8 +114,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         });
 
         if (res.status === 200) {
-          console.log("로그인 성공! 농장으로 이동합니다 🌾");
-
           await runFarmDoorAnimation();
 
           navigate(path.main);

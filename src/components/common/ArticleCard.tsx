@@ -1,7 +1,10 @@
+import { path } from "@/routes/path";
 import { motion } from "framer-motion";
 import { Image as ImageIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ArticleCardProps {
+  id: number;
   imageUrl?: string;
   title: string;
   description: string;
@@ -10,12 +13,14 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard = ({
+  id,
   imageUrl,
   title,
   description,
   source,
   date,
 }: ArticleCardProps) => {
+  const navigate = useNavigate();
   return (
     // 1. <article>을 <motion.article>로 변경하고 애니메이션 props를 추가합니다.
     <motion.article
@@ -24,6 +29,7 @@ export const ArticleCard = ({
       animate={{ opacity: 1, y: 0 }} // 최종 상태: 불투명하고 제자리에 위치
       transition={{ duration: 0.5, ease: "easeOut" }} // 애니메이션 지속 시간 및 효과
       whileHover={{ scale: 1.03 }} // 호버 시 3% 커짐
+      onClick={() => navigate("/" + path.deatil(id))}
     >
       <div className="flex-shrink-0">
         {imageUrl ? (

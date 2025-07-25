@@ -16,7 +16,7 @@ const AppRouter = createBrowserRouter([
     element: <Main />,
   },
   {
-    path: path.deatil,
+    path: path.deatil(":articleId"),
     element: <ArticleDetail />,
   },
 ]);
