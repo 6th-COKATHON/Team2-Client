@@ -1,36 +1,35 @@
+import { getDetail } from "@/apis/detail/getDetail";
 import { PotatoFarmNewsArticle } from "@/components/article/PotatoFarmNewsArticle";
-import {
-  PotatoQuizComponent,
-  type InitialQuestion,
-} from "@/components/article/PotatoQuizComponent";
-import { mockArticleData } from "@/constants/dummyArticleData";
+import { PotatoQuizComponent } from "@/components/article/PotatoQuizComponent";
+
+import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { mockData, type Article } from "@/constants/dummyArticleData";
 
 export const ArticleDetail = () => {
   const navigate = useNavigate();
-  const sampleQuestions: InitialQuestion[] = [
-    {
-      id: 1,
-      question: "React는 Facebook에서 개발한 라이브러리이다.",
-    },
-    {
-      id: 2,
-      question: "useState는 클래스 컴포넌트에서만 사용할 수 있다.",
-    },
-    {
-      id: 3,
-      question: "Tailwind CSS는 utility-first CSS 프레임워크이다.",
-    },
-    {
-      id: 4,
-      question: "JavaScript에서 const로 선언한 변수는 재할당이 가능하다.",
-    },
-    {
-      id: 5,
-      question: "TypeScript는 JavaScript의 상위 집합(superset)이다.",
-    },
-  ];
+  const { articleId } = useParams();
+
+  const articleMap = new Map<string, Article>(
+    mockData.map((article) => [article.articleId, article]),
+  );
+
+  const articleData = articleMap.get(articleId as string);
+
+  const { data: detailData } = useQuery({
+    queryKey: ["detail", articleId],
+    queryFn: () => getDetail({ articleId: articleId as string }),
+    // articleId가 존재할 때만 쿼리를 실행합니다.
+    select: (res) => res.data,
+    enabled: !!articleId,
+  });
+
+  useEffect(() => {
+    console.log(detailData);
+  }, [detailData]);
+
   return (
     <div
       style={{
@@ -46,8 +45,23 @@ export const ArticleDetail = () => {
         <ArrowLeft />
         뒤로 가기
       </button>
-      <PotatoFarmNewsArticle articleData={mockArticleData} />
-      <PotatoQuizComponent questions={sampleQuestions} />
+      <PotatoFarmNewsArticle articleData={articleData as Article} />
+      <PotatoQuizComponent
+        questions={
+          detailData?.questions || [
+            {
+              id: 1,
+              question:
+                "정부는 모든 의대생의 유급 및 제적 여부를 ‘유급은 학칙대로, 제적은 전원 유예’로 통일하여 결정했다.",
+            },
+            {
+              id: 2,
+              question:
+                "정부는 2027년 2월 또는 8월 졸업을 선택한 본과 3학년 학생들을 위해 의사 국가시험을 추가로 실시할 계획이다.",
+            },
+          ]
+        }
+      />
     </div>
   );
 };

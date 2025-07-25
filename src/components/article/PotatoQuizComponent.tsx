@@ -1,19 +1,17 @@
+//@ts-nocheck
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion"; // AnimatePresence 추가
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { postQuiz, type PostQuizPayload } from "@/apis/detail/postQuiz";
 
 import potatoChar from "@/assets/potatoChar.svg";
 import truePotato from "@/assets/truePotato.svg";
 import falsePotato from "@/assets/falsePotato.svg";
 
-// 타입 정의 (기존과 동일)
+// 타입 정의
 export interface InitialQuestion {
   id: number;
   question: string;
-}
-export interface CorrectAnswer {
-  id: number;
-  correctAnswer: boolean;
 }
 interface QuizComponentProps {
   questions: InitialQuestion[];
@@ -24,6 +22,8 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
   questions,
   title = "오늘의 감자 풀기",
 }) => {
+  const { articleId } = useParams<{ articleId: string }>();
+
   const [answers, setAnswers] = useState<{ [key: number]: boolean }>({});
   const [correctAnswers, setCorrectAnswers] = useState<{
     [key: number]: boolean;
@@ -31,27 +31,41 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showResults, setShowResults] = useState(false);
-
-  // 1. 결과 애니메이션을 제어할 상태 추가
   const [showResultAnimation, setShowResultAnimation] = useState(false);
 
-  // ... handleAnswerSelect 함수 (기존과 동일) ...
+  const handleAnswerSelect = (questionId: number, answer: boolean) => {
+    if (isSubmitted) return;
+    setAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  };
 
+  // --- 👇 여기가 수정된 부분입니다 ---
   const handleSubmit = async () => {
-    setIsLoading(true);
-    // ... API 요청 로직 (기존과 동일) ...
-    try {
-      const response = await axios.post<{ results: CorrectAnswer[] }>(
-        "/api/quiz/submit",
-        {
-          answers: Object.entries(answers).map(([id, answer]) => ({
-            questionId: Number(id),
-            userAnswer: answer,
-          })),
-        },
-      );
+    if (!articleId) return; // articleId가 없을 경우를 대비
 
-      const answersMap = response.data.results.reduce(
+    setIsLoading(true);
+
+    const answersPayload = Object.entries(answers).map(
+      ([questionId, answer]) => ({
+        id: Number(questionId),
+        answer: answer,
+      }),
+    );
+
+    const payload: PostQuizPayload = {
+      articleId: Number(articleId), // useParams는 문자열을 반환하므로 숫자로 변환
+      answers: answersPayload,
+    };
+
+    try {
+      // postQuiz는 { status, data, isSuccess } 객체를 반환합니다.
+      const response = await postQuiz(payload);
+
+      // 1. 새로운 응답 구조에 맞게 정답 배열 경로를 수정합니다.
+      // response.data.results -> response.data.results
+      const correctAnswersArray = response.data.results;
+
+      // 2. 서버에서 받은 정답 배열을 사용하기 쉬운 객체(Map) 형태로 변환합니다.
+      const answersMap = correctAnswersArray.reduce(
         (acc, cur) => {
           acc[cur.id] = cur.correctAnswer;
           return acc;
@@ -61,7 +75,7 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
 
       setCorrectAnswers(answersMap);
       setIsSubmitted(true);
-      setShowResults(true); // 이 값이 true로 바뀌면 아래 useEffect가 실행됩니다.
+      setShowResults(true);
     } catch (error) {
       console.error("정답을 받아오는 데 실패했습니다.", error);
       alert("채점 중 오류가 발생했습니다. 다시 시도해주세요.");
@@ -69,13 +83,8 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
       setIsLoading(false);
     }
   };
+  // --- 👆 수정된 부분 끝 ---
 
-  const handleAnimation = () => {
-    setShowResultAnimation(true);
-    setTimeout(() => {
-      setShowResultAnimation(false);
-    }, 2500);
-  };
   const getScore = () => {
     let correct = 0;
     questions.forEach((q) => {
@@ -86,7 +95,7 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
     return correct;
   };
 
-  // 2. 채점 결과가 나왔을 때 애니메이션을 트리거하는 useEffect
+  // ... 나머지 함수 및 JSX는 이전과 동일 ...
   useEffect(() => {
     if (showResults) {
       setShowResultAnimation(true);
@@ -107,14 +116,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
     setShowResultAnimation(false);
   };
 
-  // ... getOXStyle 함수 (기존과 동일) ...
-  const handleAnswerSelect = (questionId: number, answer: boolean) => {
-    if (isSubmitted) return;
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: answer,
-    }));
-  };
   const getOXStyle = (questionId: number, value: boolean) => {
     const isSelected = answers[questionId] === value;
 
@@ -135,9 +136,7 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
   };
 
   return (
-    // 3. 애니메이션 오버레이를 위해 relative 속성 추가
     <div className="relative mx-auto flex w-5xl flex-col overflow-hidden rounded-2xl border-8 border-amber-200 bg-gradient-to-br from-amber-50 to-orange-50 p-4 shadow-2xl">
-      {/* --- 결과 애니메이션 UI --- */}
       <AnimatePresence>
         {showResultAnimation && (
           <motion.div
@@ -167,12 +166,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* --- 기존 퀴즈 UI --- */}
-      {/* 헤더 */}
-      <button onClick={handleAnimation} className="h-40 w-40 bg-black">
-        123
-      </button>
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-amber-100 via-yellow-50 to-amber-200 px-8 py-8">
         <div className="absolute inset-0 opacity-40">
           <div className="absolute top-4 left-6 h-3 w-16 rounded-full bg-amber-300/60"></div>
@@ -200,8 +193,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
           )}
         </div>
       </div>
-
-      {/* 문제 영역 */}
       <div className="space-y-8 p-8">
         {questions.map((question) => (
           <div
@@ -215,7 +206,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
               {question.question}
             </h3>
 
-            {/* OX 버튼 */}
             <div className="flex justify-center gap-6">
               <button
                 onClick={() => handleAnswerSelect(question.id, true)}
@@ -243,7 +233,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
           </div>
         ))}
 
-        {/* 제출 버튼 */}
         {!isSubmitted && (
           <div className="pt-6 text-center">
             <button
@@ -262,7 +251,6 @@ export const PotatoQuizComponent: React.FC<QuizComponentProps> = ({
           </div>
         )}
 
-        {/* 다시 풀기 버튼 */}
         {isSubmitted && (
           <div className="pt-6 text-center">
             <button

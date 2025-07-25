@@ -1,14 +1,7 @@
+import type { Article } from "@/constants/dummyArticleData";
 import React from "react";
 
-interface ArticleData {
-  title: string;
-  description: string;
-  source: string;
-  date: string;
-  imageUrl?: string;
-}
-
-export const PotatoFarmNewsArticle: React.FC<{ articleData: ArticleData }> = ({
+export const PotatoFarmNewsArticle: React.FC<{ articleData: Article }> = ({
   articleData,
 }) => {
   return (
